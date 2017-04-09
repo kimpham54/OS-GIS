@@ -23,15 +23,6 @@
     <url>http://download.savannah.gnu.org/releases/freetype/freetype-2.7.1.tar.gz</url>
   </package>
   <package>
-    <name>FontConfig</name>
-    <license type="MIT">MIT.</license>
-    <description>Font management package.</description>
-    <bundleid>org.gnu.fontconfig</bundleid>
-    <version>2</version>
-    <source>FontConfig/fontconfig-2.12.1.tar.gz</source>
-    <url>https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.gz</url>
-  </package>
-  <package>
     <name>Expat</name>
     <license type="MIT">MIT.</license>
     <description>SAX XML parser.</description>
@@ -39,6 +30,19 @@
     <version>2</version>
     <source>Expat/expat-2.2.0.tar.bz2</source>
     <url>https://pilotfiber.dl.sourceforge.net/project/expat/expat/2.2.0/expat-2.2.0.tar.bz2</url>
+  </package>
+  <package>
+    <name>FontConfig</name>
+    <license type="MIT">MIT.</license>
+    <description>Font management package.</description>
+    <bundleid>org.gnu.fontconfig</bundleid>
+    <version>2</version>
+    <source>FontConfig/fontconfig-2.12.1.tar.gz</source>
+    <url>https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.gz</url>
+    <dependencies>
+      <dependency>FreeType</dependency>
+      <dependency>Expat</dependency>
+    </dependencies>
   </package>
   <package>
     <name>PCRE</name>

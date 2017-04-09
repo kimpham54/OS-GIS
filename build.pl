@@ -3,16 +3,19 @@
 use strict;
 
 use Getopt::Long qw(:config bundling pass_through);
+use File::Spec;
 use XML::LibXML;
 
 # Get optional arguments.
 my $help;
+my $prefix;
 my $deploy;
 my $debug;
 
 GetOptions
   (
   'help' => \$help,
+  'prefix=s' => \$prefix,
   'deploy=s' => \$deploy,
   'debug' => \$debug
   );
@@ -20,6 +23,10 @@ GetOptions
 die usage()
   if $help;
 
+$prefix = File::Spec->join($ENV{HOME}, 'Library')
+  if not $prefix;
+
+# Read packages to build, if any, from the command line.
 my @packageNamesToBuild = @ARGV;
 
 my $dom = XML::LibXML->load_xml(location => 'packages.xml');
@@ -27,6 +34,7 @@ my $dom = XML::LibXML->load_xml(location => 'packages.xml');
 my @packages;
 my %defaultPackageNamesToBuild;
 
+# Parse the XML.
 foreach my $package ($dom->findnodes('/packages/package')) 
   {
   my %package =
@@ -36,52 +44,109 @@ foreach my $package ($dom->findnodes('/packages/package'))
     bundleid => $package->findvalue('bundleid'),
     version => $package->findvalue('version'),
     source => $package->findvalue('source'),
-    options => []
+    options => [],
+    dependencies => []
     );
     
+  # Read the options.
   foreach my $option ($package->findnodes('options/option/text()'))
     {
     push @{$package{options}}, $option;
     }
     
+  # Read the dependencies.
+  my @dependencies = $package->findnodes('dependencies/dependency/text()');
+  
+  foreach my $dependency (@dependencies)
+    {
+    push @{$package{dependencies}}, $dependency;
+    }
+
+  # Save the package.
   push @packages, \%package;
   
+  # Save the package name.
   $defaultPackageNamesToBuild{$package{name}} = 1;
   }
   
+# If no packages were specified on the command line, use the default list.
 @packageNamesToBuild = keys %defaultPackageNamesToBuild
   if not @packageNamesToBuild;
 
 my %packageNamesToBuild = map { $_ => 1 } @packageNamesToBuild;
 
+# Add dependencies.
 foreach my $package (@packages)
   {
   next
     if not $packageNamesToBuild{$package->{name}};
     
-  build(
-    $package->{name},
-    $package->{bundleid},
-    $package->{version},
-    $package->{source},
-    @{$package->{options}});
+  foreach my $dependency (@{$package->{dependencies}}, 'pkg-config')
+    {
+    my $dependencyFramework = 
+      File::Spec->join($prefix, "Frameworks", "$dependency.framework");
+    
+    $packageNamesToBuild{$dependency} = 1
+      if not -d $dependencyFramework;
+    }
+  }
+
+# Build the packages.
+foreach my $package (@packages)
+  {
+  next
+    if not $packageNamesToBuild{$package->{name}};
+    
+  build($package);
   }
 
 # Use lib2framework to build a package and stuff it into a framework.
 sub build
   {
-  my $name = shift;
-  my $bundleID = shift;
-  my $version = shift;
-  my $source = shift;
-  my @args = @_;
+  my $package = shift;
+  
+  my $name = $package->{name};
+  my $bundleID = $package->{bundleid};
+  my $version = $package->{version};
+  my $source = $package->{source};
+  my @args = @{$package->{options}};
 
+  # I know my dependencies will exist at this point, but I need to build a 
+  # PKG_CONFIG_PATH variable with all of them included.
+  foreach my $dependency (@{$package->{dependencies}})
+    {
+    my $dependencyFramework = 
+      File::Spec->join($prefix, "Frameworks", "$dependency.framework");
+    
+    my $pkgConfigPath = 
+      File::Spec->join(
+        $dependencyFramework, "Versions/Current/unix/lib/pkgconfig");
+    
+    next
+      if not -d $pkgConfigPath;
+      
+    $ENV{PKG_CONFIG_PATH} = "$ENV{PKG_CONFIG_PATH}:$pkgConfigPath";
+    $ENV{PKG_CONFIG} = 
+      File::Spec->join(
+        $prefix, 
+        "Frameworks", 
+        "pkg-config.framework/Versions/Current/unix/bin/pkg-config");
+    }
+    
   push @args, "--deploy=$deploy"
     if $deploy;
     
   push @args, "--debug"
     if $debug;
     
+  push @args, "--prefix=$prefix";
+  
+  $ENV{PREFIX} = $prefix;
+  
+  print(qq{PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH}\n})
+    if $debug;
+  print(qq{PKG_CONFIG=$ENV{PKG_CONFIG}\n})
+    if $debug;
   print(qq{lib2framework $name $bundleID $version $source @args\n})
     if $debug;
     
@@ -95,6 +160,8 @@ sub usage
 Usage: build.sh [options] [package(s)]
 
   where [options] can be:
+    --help This help text
+    --prefix=<installation path>
     --deploy=<target macOS version>
     --debug For debugging statements
     
