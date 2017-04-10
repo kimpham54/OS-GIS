@@ -56,9 +56,9 @@ foreach my $package ($dom->findnodes('/packages/package'))
     }
     
   # Read the environment variables.
-  foreach my $variable ($package->findnodes('env/variable'))
+  foreach my $variable ($package->findnodes('env/*'))
     {
-    my $name = $variable->findvalue('@name');
+    my $name = $variable->findvalue('local-name()');
     my $value = $variable->findvalue('text()');
     
     push @{$package{env}->{$name}}, $value;
@@ -91,7 +91,7 @@ foreach my $package (@packages)
   next
     if not $packageNamesToBuild{$package->{name}};
     
-  foreach my $dependency (@{$package->{dependencies}}, 'pkg-config')
+  foreach my $dependency (@{$package->{dependencies}})
     {
     my $dependencyFramework = 
       File::Spec->join($prefix, "Frameworks", "$dependency.framework");
