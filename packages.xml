@@ -14,6 +14,43 @@
     </options>
   </package>
   <package>
+    <name>autoconf</name>
+    <license type="gpl">GPL2+</license>
+    <description>Autoconf. Required for KML.</description>
+    <notes>Distribution not necessary.</notes>
+    <bundleid>org.gnu.autoconf</bundleid>
+    <version>2</version>
+    <source>autoconf/autoconf-2.69.tar.gz</source>
+    <url>https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz</url>
+  </package>
+  <package>
+    <name>automake</name>
+    <license type="gpl">GPL2+</license>
+    <description>Automake. Required for KML.</description>
+    <notes>Distribution not necessary.</notes>
+    <bundleid>org.gnu.automake</bundleid>
+    <version>1</version>
+    <source>automake/automake-1.15.tar.gz</source>
+    <url>https://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz</url>
+    <dependencies>
+      <dependency>autoconf</dependency>
+    </dependencies>
+  </package>
+  <package>
+    <name>libtool</name>
+    <license type="gpl">GPL2+</license>
+    <description>Libtool. Required for KML.</description>
+    <notes>Distribution not necessary.</notes>
+    <bundleid>org.gnu.libtool</bundleid>
+    <version>2</version>
+    <source>libtool/libtool-2.4.6.tar.gz</source>
+    <url>http://gnu.mirror.iweb.com/libtool/libtool-2.4.6.tar.gz</url>
+    <dependencies>
+      <dependency>autoconf</dependency>
+      <dependency>automake</dependency>
+    </dependencies>
+  </package>
+  <package>
     <name>FreeType</name>
     <license type="other">FTL or GPL2+. FTL is a modified BSD that requires citation for use.</license>
     <description>Font rendering package.</description>
@@ -59,8 +96,16 @@
     <description>Keyhole Markup Language</description>
     <bundleid>com.google.kml</bundleid>
     <version>1</version>
-    <source>KML/libkml-1.2.0.tar.gz</source>
-    <url>https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/libkml/libkml-1.2.0.tar.gz</url>
+    <source>KML/master.zip</source>
+    <url>https://github.com/google/libkml/archive/master.zip</url>
+    <dependencies>
+      <dependency>autoconf</dependency>
+      <dependency>automake</dependency>
+      <dependency>libtool</dependency>
+    </dependencies>
+    <env>
+      <variable name="CXXFLAGS">-Wno-error=unused-const-variable</variable>
+    </env>
   </package>
   <package>
     <name>MySQL</name>

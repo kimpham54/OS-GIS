@@ -45,6 +45,7 @@ foreach my $package ($dom->findnodes('/packages/package'))
     version => $package->findvalue('version'),
     source => $package->findvalue('source'),
     options => [],
+    env => {},
     dependencies => []
     );
     
@@ -54,6 +55,15 @@ foreach my $package ($dom->findnodes('/packages/package'))
     push @{$package{options}}, $option;
     }
     
+  # Read the environment variables.
+  foreach my $variable ($package->findnodes('env/variable'))
+    {
+    my $name = $variable->findvalue('@name');
+    my $value = $variable->findvalue('text()');
+    
+    push @{$package{env}->{$name}}, $value;
+    }
+
   # Read the dependencies.
   my @dependencies = $package->findnodes('dependencies/dependency/text()');
   
@@ -109,14 +119,21 @@ sub build
   my $bundleID = $package->{bundleid};
   my $version = $package->{version};
   my $source = $package->{source};
+  my %env = %{$package->{env}};
   my @args = @{$package->{options}};
 
   # I know my dependencies will exist at this point, but I need to build a 
   # PKG_CONFIG_PATH variable with all of them included.
+  # I should go ahead and add any executables to PATH too.
   foreach my $dependency (@{$package->{dependencies}})
     {
+    # Do the path first since I need to be extra careful with pkg-config.
     my $dependencyFramework = 
       File::Spec->join($prefix, "Frameworks", "$dependency.framework");
+    
+    my $dependencyPath = File::Spec->join($dependencyFramework, "Programs");
+        
+    $ENV{PATH} = "$ENV{PATH}:$dependencyPath";
     
     my $pkgConfigPath = 
       File::Spec->join(
@@ -126,13 +143,14 @@ sub build
       if not -d $pkgConfigPath;
       
     $ENV{PKG_CONFIG_PATH} = "$ENV{PKG_CONFIG_PATH}:$pkgConfigPath";
-    $ENV{PKG_CONFIG} = 
-      File::Spec->join(
-        $prefix, 
-        "Frameworks", 
-        "pkg-config.framework/Versions/Current/unix/bin/pkg-config");
     }
     
+	$ENV{PKG_CONFIG} = 
+		File::Spec->join(
+			$prefix, 
+			"Frameworks", 
+			"pkg-config.framework/Versions/Current/unix/bin/pkg-config");
+
   push @args, "--deploy=$deploy"
     if $deploy;
     
@@ -143,10 +161,26 @@ sub build
   
   $ENV{PREFIX} = $prefix;
   
+  while(my ($variable, $values) = each %env)
+    {
+    $ENV{$variable} = "@{$values}";
+    }
+    
   print(qq{PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH}\n})
     if $debug;
   print(qq{PKG_CONFIG=$ENV{PKG_CONFIG}\n})
     if $debug;
+  print(qq{PATH=$ENV{PATH}\n})
+    if $debug;
+  
+  if($debug)
+    {
+    foreach my $env (keys %env)
+      {
+      print(qq{$env=$ENV{$env}\n})
+      }
+    }
+    
   print(qq{lib2framework $name $bundleID $version $source @args\n})
     if $debug;
     
