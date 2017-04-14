@@ -122,10 +122,10 @@
     <description>Keyhole Markup Language</description>
     <bundleid>com.google.kml</bundleid>
     <version>1</version>
-    <!-- <source>KML/libkml</source>
-    <url>https://github.com/etresoft/libkml/archive/master.zip</url> -->
-    <source>KML/libkml-synced_upstream</source>
-    <url>https://github.com/libkml/libkml/archive/synced_upstream.zip</url>
+    <source>KML/libkml</source>
+    <url>https://github.com/etresoft/libkml/archive/master.zip</url> 
+    <!-- <source>KML/libkml-synced_upstream</source>
+    <url>https://github.com/libkml/libkml/archive/synced_upstream.zip</url> -->
     <options>
       <!-- There is not libkml.dylib. -->
       <option>--lib=libkmlbase.0.dylib</option>
@@ -137,9 +137,9 @@
       <dependency>libtool</dependency>
       <dependency>Expat</dependency>
     </dependencies>
-    <env>
+    <!-- <env>
       <BOOST_ROOT>/tmp/libkml-synced_upstream/third_party/boost</BOOST_ROOT>
-    </env>
+    </env> -->
   </package>
   <package>
     <name>MySQL</name>
