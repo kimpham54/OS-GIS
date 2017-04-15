@@ -4,391 +4,273 @@
     <!-- Distribution not necessary. -->
     <license type="gpl">GPL2+</license>
     <description>Package config. Used to make building easier.</description>
-    <bundleid>org.freedesktop.pkg-config</bundleid>
-    <version>0</version>
-    <source>pkg-config/pkg-config-0.29.2.tar.gz</source>
+    <source>sources/pkg-config/pkg-config-0.29.2.tar.gz</source>
     <url>https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz</url>
-    <options>
-      <!-- Use internal glib since Apple doesn't ship with one. Specify a 
-           single architecture because the internal glib can't handle 
-           multiple architectures. -->
-      <option>--arch=x86_64</option>
-      <option>--with-internal-glib</option>
-    </options>
+    <!-- Hard code the prefix, platform, and architecture since this is a build tool. -->
+    <prefix>usr</prefix>
+    <platform>macosx</platform>
+    <architecture>x86_64</architecture>
+    <!-- Use internal glib since Apple doesn't ship with one. -->
+    <configure>./configure --with-internal-glib</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>autoconf</name>
     <!-- Distribution not necessary. -->
     <license type="gpl">GPL2+</license>
     <description>Autoconf. Required for KML.</description>
-    <bundleid>org.gnu.autoconf</bundleid>
-    <version>2</version>
-    <source>autoconf/autoconf-2.69.tar.gz</source>
+    <source>sources/autoconf/autoconf-2.69.tar.gz</source>
     <url>https://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
+    <!-- Hard code the prefix, platform, and architecture since this is a build tool. -->
+    <prefix>usr</prefix>
+    <platform>macosx</platform>
+    <architecture>x86_64</architecture>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>automake</name>
     <!-- Distribution not necessary. -->
     <license type="gpl">GPL2+</license>
     <description>Automake. Required for KML.</description>
-    <bundleid>org.gnu.automake</bundleid>
-    <version>1</version>
-    <source>automake/automake-1.15.tar.gz</source>
+    <source>sources/automake/automake-1.15.tar.gz</source>
     <url>https://ftp.gnu.org/gnu/automake/automake-1.15.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-      <dependency>autoconf</dependency>
-    </dependencies>
+    <!-- Hard code the prefix, platform, and architecture since this is a build tool. -->
+    <prefix>usr</prefix>
+    <platform>macosx</platform>
+    <architecture>x86_64</architecture>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>libtool</name>
     <!-- Distribution not necessary. -->
     <license type="gpl">GPL2+</license>
     <description>Libtool. Required for KML.</description>
-    <bundleid>org.gnu.libtool</bundleid>
-    <version>2</version>
-    <source>libtool/libtool-2.4.6.tar.gz</source>
+    <source>sources/libtool/libtool-2.4.6.tar.gz</source>
     <url>http://gnu.mirror.iweb.com/libtool/libtool-2.4.6.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-      <dependency>autoconf</dependency>
-      <dependency>automake</dependency>
-    </dependencies>
-  </package>
-  <package>
-    <name>FreeType</name>
-    <license type="other">FTL or GPL2+. FTL is a modified BSD that requires citation for use.</license>
-    <description>Font rendering package.</description>
-    <bundleid>org.gnu.freetype</bundleid>
-    <version>2</version>
-    <source>FreeType/freetype-2.7.1.tar.gz</source>
-    <url>http://download.savannah.gnu.org/releases/freetype/freetype-2.7.1.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
+    <!-- Hard code the prefix, platform, and architecture since this is a build tool. -->
+    <prefix>usr</prefix>
+    <platform>macosx</platform>
+    <architecture>x86_64</architecture>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>Expat</name>
     <license type="MIT">MIT.</license>
     <description>SAX XML parser.</description>
-    <bundleid>net.sourceforge.expat</bundleid>
-    <version>2</version>
-    <source>Expat/expat-2.2.0.tar.bz2</source>
+    <source>sources/Expat/expat-2.2.0.tar.bz2</source>
     <url>https://pilotfiber.dl.sourceforge.net/project/expat/expat/2.2.0/expat-2.2.0.tar.bz2</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
+  </package>
+  <package>
+    <name>FreeType</name>
+    <license type="other">FTL or GPL2+. FTL is a modified BSD that requires citation for use.</license>
+    <description>Font rendering package.</description>
+    <source>sources/FreeType/freetype-2.7.1.tar.gz</source>
+    <url>http://download.savannah.gnu.org/releases/freetype/freetype-2.7.1.tar.gz</url>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>FontConfig</name>
     <license type="MIT">MIT.</license>
     <description>Font management package.</description>
-    <bundleid>org.gnu.fontconfig</bundleid>
-    <version>2</version>
-    <source>FontConfig/fontconfig-2.12.1.tar.gz</source>
+    <source>sources/FontConfig/fontconfig-2.12.1.tar.gz</source>
     <url>https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.1.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-      <dependency>FreeType</dependency>
-      <dependency>Expat</dependency>
-    </dependencies>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>PCRE</name>
     <license type="BSD">BSD.</license>
     <description>Perl-Compatible Regular Expressions</description>
-    <bundleid>org.pcre.pcre</bundleid>
-    <version>8</version>
-    <source>PCRE/pcre-8.40.tar.gz</source>
+    <source>sources/PCRE/pcre-8.40.tar.gz</source>
     <url>https://ftp.pcre.org/pub/pcre/pcre-8.40.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
-    <options>
-      <!-- The default build settings don't have many options. -->
-      <option>--enable-pcre16</option>
-      <option>--enable-pcre32</option>
-      <option>--enable-utf</option>
-      <option>--enable-unicode-properties</option>
-      <option>--enable-jit</option>
-    </options>
+    <configure>./configure --enable-pcre16 --enable-pcre32 --enable-utf --enable-unicode-properties --enable-jit</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>KML</name>
     <license type="BSD">BSD.</license>
     <description>Keyhole Markup Language</description>
-    <bundleid>com.google.kml</bundleid>
-    <version>1</version>
-    <source>KML/libkml</source>
+    <source>sources/KML/libkml</source>
     <url>https://github.com/etresoft/libkml/archive/master.zip</url> 
-    <!-- <source>KML/libkml-synced_upstream</source>
-    <url>https://github.com/libkml/libkml/archive/synced_upstream.zip</url> -->
-    <options>
-      <!-- There is not libkml.dylib. -->
-      <option>--lib=libkmlbase.0.dylib</option>
-    </options>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-      <dependency>autoconf</dependency>
-      <dependency>automake</dependency>
-      <dependency>libtool</dependency>
-      <dependency>Expat</dependency>
-    </dependencies>
-    <!-- <env>
-      <BOOST_ROOT>/tmp/libkml-synced_upstream/third_party/boost</BOOST_ROOT>
-    </env> -->
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>MySQL</name>
     <license type="GPL">GPLv2</license>
     <description>MySQL client connector</description>
-    <bundleid>com.mysql.connector</bundleid>
-    <version>6</version>
-    <source>MySQL/mysql-connector-c-6.1.9-src</source>
+    <source>sources/MySQL/mysql-connector-c-6.1.9-src.tar.gz</source>
     <url>https://cdn.mysql.com//Downloads/Connector-C/mysql-connector-c-6.1.9-src.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
+    <cmake>mkdir build; cd build; /Applications/CMake.app/Contents/bin/cmake ..</cmake>
+    <build>cd build; make</build>
+    <install>cd build; make install</install>
   </package>
   <package>
     <name>SQLite</name>
     <license type="Public domain">Public domain.</license>
     <description>SQLite database.</description>
-    <bundleid>org.sqlite.sqlite</bundleid>
-    <version>3</version>
-    <source>SQLite/sqlite-autoconf-3180000</source>
+    <source>sources/SQLite/sqlite-autoconf-3180000</source>
     <url>https://www.sqlite.org/2017/sqlite-autoconf-3180000.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>ODBC</name>
     <license type="GPL">GPLv2</license>
     <description>Open DataBase Connectivity</description>
-    <bundleid>org.unixodbc.odbc</bundleid>
-    <version>2</version>
-    <source>ODBC/unixODBC-2.3.4</source>
+    <source>sources/ODBC/unixODBC-2.3.4</source>
     <url>http://www.unixodbc.org/unixODBC-2.3.4.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
+    <configure>autoreconf -fv; automake --add-missing; ./configure --enable-gui=no</configure>
+    <build>make</build>
+    <install>make install</install>
   </package>
   <package>
     <name>FreeXL</name>
     <license type="MPL">Mozilla Public License</license>
     <description>Excel package</description>
-    <bundleid>it.gaia-gis.freexl</bundleid>
-    <version>1</version>
-    <source>FreeXL/freexl-1.0.2.tar.gz</source>
+    <source>sources/FreeXL/freexl-1.0.2.tar.gz</source>
     <url>http://www.gaia-gis.it/gaia-sins/freexl-1.0.2.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>OpenMPI</name>
     <license type="BSD">BSD.</license>
     <description>Parallel processing compiler.</description>
-    <bundleid>org.open-mpi.openmpi</bundleid>
-    <version>2</version>
-    <source>OpenMPI/openmpi-2.1.0</source>
+    <source>sources/OpenMPI/openmpi-2.1.0</source>
     <url>https://www.open-mpi.org/software/ompi/v2.1/downloads/openmpi-2.1.0.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>JPEG</name>
     <license type="other">IJG. Citation required.</license>
     <description>Old JPEG package.</description>
-    <bundleid>org.ijg.openjpeg</bundleid>
-    <version>6</version>
-    <source>JPEG/jpegsrc.v6b.tar.gz</source>
+    <source>sources/JPEG/jpegsrc.v6b.tar.gz</source>
     <url>https://sourceforge.net/projects/libjpeg/files/libjpeg/6b/jpegsrc.v6b.tar.gz/download</url>
     <options>
       <option>--target=install-lib</option>
       <option>--env=INSTALL=osxinstall</option>
     </options>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>JPEG</name>
     <license type="other">IJG. Citation required.</license>
     <description>New JPEG package.</description>
-    <bundleid>org.ijg.openjpeg</bundleid>
-    <version>9</version>
-    <source>JPEG/jpegsrc.v9b.tar.gz</source>
+    <source>sources/JPEG/jpegsrc.v9b.tar.gz</source>
     <url>http://www.ijg.org/files/jpegsrc.v9b.tar.gz</url>
     <options>
       <option>--enable-shared</option>
     </options>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>TIFF</name>
     <license type="BSD">BSD.</license>
     <description>TIFF package</description>
     <notes>This is the OSGEO version.</notes>
-    <bundleid>org.osgeo.tif</bundleid>
-    <version>4</version>
-    <source>TIFF/tiff-4.0.7</source>
+    <source>sources/TIFF/tiff-4.0.7</source>
     <url>http://download.osgeo.org/libtiff/tiff-4.0.7.tar.gz</url>
     <options>
       <option>--lib=libtiff.5.dylib</option>
     </options>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>NetCDF</name>
     <license type="other">Liberal.</license>
     <description>NetCDF.</description>
-    <bundleid>edu.ucar.netcdf</bundleid>
-    <version>4</version>
-    <source>NetCDF/netcdf-4.4.1.1.tar.gz</source>
+    <source>sources/NetCDF/netcdf-4.4.1.1.tar.gz</source>
     <url>ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.1.1.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>HDF</name>
     <license type="BSD">BSD.</license>
     <description>Hierarchical Data Format.</description>
     <notes></notes>
-    <bundleid>org.hdfgroup.hdf</bundleid>
-    <version>4</version>
-    <source>HDF/hdf-4.2.12.tar.gz</source>
+    <source>sources/HDF/hdf-4.2.12.tar.gz</source>
     <url>https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.12/src/hdf-4.2.12.tar.gz</url>
     <options>
       <option>--enable-production</option>
       <option>--enable-shared</option>
       <option>--disable-fortran</option>
     </options>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>HDF</name>
     <license type="BSD">BSD.</license>
     <description>Hierarchical Data Format.</description>
-    <bundleid>org.hdfgroup.hdf</bundleid>
-    <version>5</version>
-    <source>HDF/hdf5-1.8.18.tar.gz</source>
+    <source>sources/HDF/hdf5-1.8.18.tar.gz</source>
     <url>https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.18.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>OpenJPEG</name>
     <license type="BSD">BSD.</license>
     <description>JPEG2000</description>
-    <notes></notes>
-    <bundleid>org.openjpeg.openjpeg</bundleid>
-    <version>2</version>
     <source>OpenJPEG/openjpegv2.tar.gz</source>
     <url>https://codeload.github.com/uclouvain/openjpeg/tar.gz/v2.1.2</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>PNG</name>
     <license type="other">libpng license.</license>
     <description>Portable Network Graphics.</description>
-    <bundleid>org.libpng.png</bundleid>
-    <version>1</version>
-    <source>PNG/libpng-1.6.28.tar.gz</source>
+    <source>sources/PNG/libpng-1.6.28.tar.gz</source>
     <url>https://superb-dca2.dl.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>PDF</name>
     <license type="GPL">GPLv2</license>
     <description>Poppler PDF package.</description>
-    <bundleid>org.freedesktop.poppler</bundleid>
-    <version>0</version>
-    <source>PDF/poppler-0.53.0.tar.xz</source>
+    <source>sources/PDF/poppler-0.53.0.tar.xz</source>
     <url>https://poppler.freedesktop.org/poppler-0.53.0.tar.xz</url>
     <options>
       <option>--enable-xpdf-headers</option>
     </options>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>PROJ</name>
     <license type="MIT">MIT.</license>
     <description>PROJ.4 projections package.</description>
     <notes>Needs additional datum files from http://download.osgeo.org/proj/proj-datumgrid-1.5.zip</notes>
-    <bundleid>org.maptools.proj</bundleid>
-    <version>4</version>
-    <source>PROJ/proj-4.9.3.tar.gz</source>
+    <source>sources/PROJ/proj-4.9.3.tar.gz</source>
     <url>http://download.osgeo.org/proj/proj-4.9.3.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>iconv</name>
     <license type="GPL">GPLv3</license>
     <description>Internationalization.</description>
-    <bundleid>org.gnu.iconv</bundleid>
-    <version>1</version>
-    <source>iconv/libiconv-1.15.tar.gz</source>
+    <source>sources/iconv/libiconv-1.15.tar.gz</source>
     <url>https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.15.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>GEOS</name>
     <license type="GPL">GPLv2</license>
     <description>Geometry package.</description>
-    <bundleid>org.osgeo.geos</bundleid>
-    <version>3</version>
-    <source>GEOS/geos-3.6.1.tar.bz2</source>
+    <source>sources/GEOS/geos-3.6.1.tar.bz2</source>
     <url>http://download.osgeo.org/geos/geos-3.6.1.tar.bz2</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>SpatiaLite</name>
     <license type="MPL">Mozilla Public License or GPLv2+ or LGPLv2+</license>
     <description>Spatial extension to SQLite.</description>
-    <bundleid>it.gaia-gis.spatialite</bundleid>
-    <version>4</version>
-    <source>SpatiaLite/libspatialite-4.3.0a.tar.gz</source>
+    <source>sources/SpatiaLite/libspatialite-4.3.0a.tar.gz</source>
     <url>http://www.gaia-gis.it/gaia-sins/libspatialite-4.3.0a.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
   <package>
     <name>GDAL</name>
     <license type="MIT">MIT and more.</license>
     <description>Geographic Data Abstraction Library.</description>
-    <bundleid>org.osgeo.gdal</bundleid>
-    <version>2</version>
-    <source>GDAL/gdal-2.1.3.tar.gz</source>
+    <source>sources/GDAL/gdal-2.1.3.tar.gz</source>
     <url>http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz</url>
-    <dependencies>
-      <dependency>pkg-config</dependency>
-    </dependencies>
   </package>
 </packages>
