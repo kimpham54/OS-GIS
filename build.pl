@@ -179,13 +179,13 @@ sub build
 		runsystem(qq{/bin/rm -Rf "$tmpdir"});
 		runsystem(qq{/bin/mkdir -p "$tmpdir"});
 
-		if($archive =~ /\.tgz|\.tar\.gz$/)
+		if($archive =~ /\.tgz|\.tar\.gz$|\.tar\.xz/)
 			{
-			runsystem(qq{/usr/bin/tar zxf "$source" "-C$tmpdir"});
+			runsystem(qq{/usr/bin/tar xf "$source" "-C$tmpdir"});
 			} 
 		elsif($archive =~ /\.tbz|\.tar\.bz2$/)
 			{
-			runsystem(qq{/usr/bin/tar jxf "$source" "-C/tmp/$archive"});
+			runsystem(qq{/usr/bin/tar xf "$source" "-C/tmp/$archive"});
 			}
 		elsif($archive =~ /\.zip$/)
 			{
@@ -278,8 +278,18 @@ sub build
   $cxxflags .= "$minversion "
     if $minversion;
 
+  # Setup compiler flags.
+  my $includePath = File::Spec->join($prefix, 'include');
+  
+  my $cppflags = "-I$includePath ";
+
+  $ENV{CPPFLAGS} = $cppflags;
 	$ENV{CFLAGS} = $cflags;
 	$ENV{CXXFLAGS} = $cxxflags;
+
+  my $linkPath = File::Spec->join($prefix, 'lib');
+
+	$ENV{LDFLAGS} = "-L$linkPath ";
 
   # Debug statements.
   if($debug)
@@ -291,8 +301,10 @@ sub build
 		print(qq{SDKROOT=$ENV{PREFIX}\n});
 		print(qq{IPHONEOS_DEPLOYMENT_TARGET=$ENV{IPHONEOS_DEPLOYMENT_TARGET}\n});
 		print(qq{MACOSX_DEPLOYMENT_TARGET=$ENV{MACOSX_DEPLOYMENT_TARGET}\n});
+		print(qq{CPPFLAGS=$ENV{CPPFLAGS}\n});
 		print(qq{CFLAGS=$ENV{CFLAGS}\n});
 		print(qq{CXXFLAGS=$ENV{CXXFLAGS}\n});
+		print(qq{LDFLAGS=$ENV{LDFLAGS}\n});
 		
     foreach my $env (keys %env)
       {
