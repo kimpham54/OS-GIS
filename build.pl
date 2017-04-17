@@ -312,14 +312,32 @@ sub build
       }
     }
     
-	runsystem(qq{$package->{cmake} @cmakeargs})
-		if $package->{cmake};
-
-	runsystem(qq{$package->{configure} @configureargs})
-		if $package->{configure};
-
-	runsystem(qq{$package->{build}})
-		if $package->{build};
+	if($package->{cmake})
+	  {
+    my $cmake = $package->{cmake};
+  
+    $cmake =~ s/ROOT/$prefix/g;
+    
+		runsystem(qq{$cmake @cmakeargs})
+		}
+		
+	if($package->{configure})
+    {
+    my $configure = $package->{configure};
+	
+    $configure =~ s/ROOT/$prefix/g;
+    
+	  runsystem(qq{$configure @configureargs})
+    }
+    
+	if($package->{build})
+    {
+    my $build = $package->{bild};
+	
+    $build =~ s/ROOT/$prefix/g;
+    
+	  runsystem(qq{$build})
+    }
 
   runsystem(qq{$package->{install}})
 	  if $package->{install};

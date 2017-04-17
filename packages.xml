@@ -104,11 +104,11 @@
     <name>KML</name>
     <license type="BSD">BSD.</license>
     <description>Keyhole Markup Language</description>
-    <source>sources/KML/libkml</source>
-    <url>https://github.com/etresoft/libkml/archive/master.zip</url> 
-    <configure>./configure</configure>
-    <build>make</build>
-    <install>make install</install>
+    <source>sources/KML/libkml-synced_upstream</source>
+    <url>https://github.com/libkml/libkml/archive/master.zip</url> 
+    <cmake>mkdir build; cd build; /Applications/CMake.app/Contents/bin/cmake ..</cmake>
+    <build>cd build; make</build>
+    <install>cd build; make install</install>
   </package>
   <package>
     <name>MySQL</name>
@@ -246,8 +246,16 @@
     <name>PDF</name>
     <license type="GPL">GPLv2</license>
     <description>Poppler PDF package.</description>
-    <source>sources/PDF/poppler-0.53.0.tar.xz</source>
-    <url>https://poppler.freedesktop.org/poppler-0.53.0.tar.xz</url>
+    <source>sources/PDF/poppler-data-0.4.7.tar.gz</source>
+    <url>https://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz</url>
+    <build>make install prefix=ROOT</build>
+  </package>
+  <package>
+    <name>PDF</name>
+    <license type="GPL">GPLv2</license>
+    <description>Poppler PDF package.</description>
+    <source>sources/PDF/poppler-0.31.0.tar.xz</source>
+    <url>https://poppler.freedesktop.org/poppler-0.31.0.tar.xz</url>
     <configure>./configure --enable-xpdf-headers</configure>
     <build>make</build>
     <install>make install</install>
@@ -317,6 +325,6 @@
     <description>Geographic Data Abstraction Library.</description>
     <source>sources/GDAL/gdal-2.1.3.tar.gz</source>
     <url>http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz</url>
-    <configure>./configure --with-expat --with-mysql --with-libkml --with-sqlite3 --with-spatialite --with-poppler --with-freexl</configure>
+    <configure>./configure --with-expat=ROOT --with-mysql --with-libkml=ROOT --with-sqlite3=ROOT --with-spatialite=ROOT --with-poppler=ROOT --with-freexl=ROOT --with-static-proj4</configure>
   </package>
 </packages>
