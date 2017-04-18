@@ -61,7 +61,19 @@
     <install>make install</install>
   </package>
   <package>
+    <name>iconv</name>
+    <group>GDAL</group>
+    <license type="GPL">GPLv3</license>
+    <description>Internationalization.</description>
+    <source>sources/iconv/libiconv-1.15.tar.gz</source>
+    <url>https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.15.tar.gz</url>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
+  </package>
+  <package>
     <name>Expat</name>
+    <group>GDAL</group>
     <license type="MIT">MIT.</license>
     <description>SAX XML parser.</description>
     <source>sources/Expat/expat-2.2.0.tar.bz2</source>
@@ -71,7 +83,30 @@
     <install>make install</install>
   </package>
   <package>
+    <name>LibXML2</name>
+    <group>GDAL</group>
+    <license type="MIT">MIT.</license>
+    <description>XML Parser.</description>
+    <source>sources/LibXML2/libxml2-sources-2.9.3.tar.gz</source>
+    <url>ftp://xmlsoft.org/libxml2/libxml2-sources-2.9.3.tar.gz</url>
+    <configure>./configure --without-python</configure>
+    <build>make</build>
+    <install>make install</install>
+  </package>
+  <package>
+    <name>PNG</name>
+    <group>GDAL</group>
+    <license type="other">libpng license.</license>
+    <description>Portable Network Graphics.</description>
+    <source>sources/PNG/libpng-1.6.28.tar.gz</source>
+    <url>https://superb-dca2.dl.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.gz</url>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
+  </package>
+  <package>
     <name>FreeType</name>
+    <group>GDAL</group>
     <license type="other">FTL or GPL2+. FTL is a modified BSD that requires citation for use.</license>
     <description>Font rendering package.</description>
     <source>sources/FreeType/freetype-2.7.1.tar.gz</source>
@@ -81,7 +116,10 @@
     <install>make install</install>
   </package>
   <package>
+    <!-- FONTCONFIG_FILE is used to override the default configuration file.
+         FONTCONFIG_PATH is used to override the default configuration directory.  -->
     <name>FontConfig</name>
+    <group>GDAL</group>
     <license type="MIT">MIT.</license>
     <description>Font management package.</description>
     <source>sources/FontConfig/fontconfig-2.12.1.tar.gz</source>
@@ -92,6 +130,7 @@
   </package>
   <package>
     <name>PCRE</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>Perl-Compatible Regular Expressions</description>
     <source>sources/PCRE/pcre-8.40.tar.gz</source>
@@ -102,6 +141,7 @@
   </package>
   <package>
     <name>KML</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>Keyhole Markup Language</description>
     <source>sources/KML/libkml-synced_upstream</source>
@@ -112,6 +152,7 @@
   </package>
   <package>
     <name>MySQL</name>
+    <group>GDAL</group>
     <license type="GPL">GPLv2</license>
     <description>MySQL client connector</description>
     <source>sources/MySQL/mysql-connector-c-6.1.9-src.tar.gz</source>
@@ -122,6 +163,7 @@
   </package>
   <package>
     <name>SQLite</name>
+    <group>GDAL</group>
     <license type="Public domain">Public domain.</license>
     <description>SQLite database.</description>
     <source>sources/SQLite/sqlite-autoconf-3180000</source>
@@ -132,6 +174,7 @@
   </package>
   <package>
     <name>ODBC</name>
+    <group>GDAL</group>
     <license type="GPL">GPLv2</license>
     <description>Open DataBase Connectivity</description>
     <source>sources/ODBC/unixODBC-2.3.4</source>
@@ -142,6 +185,7 @@
   </package>
   <package>
     <name>FreeXL</name>
+    <group>GDAL</group>
     <license type="MPL">Mozilla Public License</license>
     <description>Excel package</description>
     <source>sources/FreeXL/freexl-1.0.2.tar.gz</source>
@@ -152,6 +196,7 @@
   </package>
   <package>
     <name>OpenMPI</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>Parallel processing compiler.</description>
     <source>sources/OpenMPI/openmpi-2.1.0.tar.gz</source>
@@ -162,6 +207,7 @@
   </package>
   <package>
     <name>JPEG</name>
+    <group>GDAL</group>
     <license type="other">IJG. Citation required.</license>
     <description>Old JPEG package.</description>
     <source>sources/JPEG/jpegsrc.v6b.tar.gz</source>
@@ -172,6 +218,7 @@
   </package>
   <package>
     <name>JPEG</name>
+    <group>GDAL</group>
     <license type="other">IJG. Citation required.</license>
     <description>New JPEG package.</description>
     <source>sources/JPEG/jpegsrc.v9b.tar.gz</source>
@@ -182,6 +229,7 @@
   </package>
   <package>
     <name>TIFF</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>TIFF package</description>
     <notes>This is the OSGEO version.</notes>
@@ -193,6 +241,7 @@
   </package>
   <package>
     <name>HDF</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>Hierarchical Data Format.</description>
     <notes></notes>
@@ -204,6 +253,7 @@
   </package>
   <package>
     <name>HDF</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>Hierarchical Data Format.</description>
     <source>sources/HDF/hdf5-1.8.18.tar.gz</source>
@@ -214,6 +264,7 @@
   </package>
   <package>
     <name>NetCDF</name>
+    <group>GDAL</group>
     <license type="other">Liberal.</license>
     <description>NetCDF.</description>
     <source>sources/NetCDF/netcdf-4.4.1.1.tar.gz</source>
@@ -224,6 +275,7 @@
   </package>
   <package>
     <name>OpenJPEG</name>
+    <group>GDAL</group>
     <license type="BSD">BSD.</license>
     <description>JPEG2000</description>
     <source>sources/OpenJPEG/openjpeg-v2.1.2.tar.gz</source>
@@ -233,17 +285,8 @@
     <install>cd build; make install</install>
   </package>
   <package>
-    <name>PNG</name>
-    <license type="other">libpng license.</license>
-    <description>Portable Network Graphics.</description>
-    <source>sources/PNG/libpng-1.6.28.tar.gz</source>
-    <url>https://superb-dca2.dl.sourceforge.net/project/libpng/libpng16/1.6.28/libpng-1.6.28.tar.gz</url>
-    <configure>./configure</configure>
-    <build>make</build>
-    <install>make install</install>
-  </package>
-  <package>
     <name>PDF</name>
+    <group>GDAL</group>
     <license type="GPL">GPLv2</license>
     <description>Poppler PDF package.</description>
     <source>sources/PDF/poppler-data-0.4.7.tar.gz</source>
@@ -252,6 +295,7 @@
   </package>
   <package>
     <name>PDF</name>
+    <group>GDAL</group>
     <license type="GPL">GPLv2</license>
     <description>Poppler PDF package.</description>
     <source>sources/PDF/poppler-0.31.0.tar.xz</source>
@@ -262,6 +306,7 @@
   </package>
   <package>
     <name>PROJ</name>
+    <group>GDAL</group>
     <license type="MIT">MIT.</license>
     <description>Extra PROJ.4 projections package.</description>
     <source>sources/PROJ/proj-datumgrid-1.5.zip</source>
@@ -269,7 +314,9 @@
     <build>rm -Rf /tmp/proj-datums; mkdir -p /tmp/proj-datums; cp /tmp/proj-datumgrid-1.5.zip/* /tmp/proj-datums</build>
   </package>
   <package>
+    <!-- PROJ_DIR ROOT/share/proj -->
     <name>PROJ</name>
+    <group>GDAL</group>
     <license type="MIT">MIT.</license>
     <description>PROJ.4 projections package.</description>
     <!-- Needs additional datum files from http://download.osgeo.org/proj/proj-datumgrid-1.5.zip. -->
@@ -280,17 +327,8 @@
     <install>make install</install>
   </package>
   <package>
-    <name>iconv</name>
-    <license type="GPL">GPLv3</license>
-    <description>Internationalization.</description>
-    <source>sources/iconv/libiconv-1.15.tar.gz</source>
-    <url>https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.15.tar.gz</url>
-    <configure>./configure</configure>
-    <build>make</build>
-    <install>make install</install>
-  </package>
-  <package>
     <name>GEOS</name>
+    <group>GDAL</group>
     <license type="GPL">GPLv2</license>
     <description>Geometry package.</description>
     <source>sources/GEOS/geos-3.6.1.tar.bz2</source>
@@ -300,17 +338,8 @@
     <install>make install</install>
   </package>
   <package>
-    <name>LibXML2</name>
-    <license type="MIT">MIT.</license>
-    <description>XML Parser.</description>
-    <source>sources/LibXML2/libxml2-sources-2.9.3.tar.gz</source>
-    <url>ftp://xmlsoft.org/libxml2/libxml2-sources-2.9.3.tar.gz</url>
-    <configure>./configure --without-python</configure>
-    <build>make</build>
-    <install>make install</install>
-  </package>
-  <package>
     <name>SpatiaLite</name>
+    <group>GDAL</group>
     <license type="MPL">Mozilla Public License or GPLv2+ or LGPLv2+</license>
     <description>Spatial extension to SQLite.</description>
     <source>sources/SpatiaLite/libspatialite-4.3.0a.tar.gz</source>
@@ -321,6 +350,7 @@
   </package>
   <package>
     <name>PostgreSQL</name>
+    <group>GDAL</group>
     <license type="MIT">MIT.</license>
     <description>PostgreSQL databae.</description>
     <source>sources/PostgreSQL/postgresql-9.6.2.tar.gz</source>
@@ -330,7 +360,9 @@
     <install>make install</install>
   </package>
   <package>
+    <!-- GDAL_DATA ROOT/share/gdal -->
     <name>GDAL</name>
+    <group>GDAL</group>
     <license type="MIT">MIT and more.</license>
     <description>Geographic Data Abstraction Library.</description>
     <source>sources/GDAL/gdal-2.1.3.tar.gz</source>

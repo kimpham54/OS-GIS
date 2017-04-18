@@ -13,6 +13,7 @@ my $help;
 my $platform;
 my $architecture;
 my $deployment;
+my $group;
 my $debug;
 
 GetOptions
@@ -21,6 +22,7 @@ GetOptions
   'platform=s' => \$platform,
   'architecture=s' => \$architecture,
   'deployment=s' => \$deployment,
+  'group=s' => \$group,
   'debug' => \$debug
   );
   
@@ -41,6 +43,7 @@ foreach my $package ($dom->findnodes('/packages/package'))
   my %package =
     (
     name => $package->findvalue('name'),
+    group => $package->findvalue('group'),
     license => $package->findvalue('license/@type'),
     source => $package->findvalue('source'),
     prefix => $package->findvalue('prefix'),
@@ -66,8 +69,11 @@ foreach my $package ($dom->findnodes('/packages/package'))
   
   # Save the package name.
   $defaultPackageNamesToBuild{$package{name}} = 1;
-  }
   
+  push(@packageNamesToBuild, $package{name})
+    if $group && ($package{group} eq $group);
+  }
+
 # If no packages were specified on the command line, use the default list.
 @packageNamesToBuild = keys %defaultPackageNamesToBuild
   if not @packageNamesToBuild;
@@ -129,9 +135,9 @@ sub build
   $ENV{PATH} = "$ENV{PATH}:$platformPath";
 
   # Setup the dynamic library search path.
-  my $platformLib = File::Spec->join($root, 'platforms', $sdk, $arch, 'lib');
+  #my $platformLib = File::Spec->join($root, 'platforms', $sdk, $arch, 'lib');
   
-  $ENV{DYLD_LIBRARY_PATH} = "$ENV{DYLD_LIBRARY_PATH}:$platformLib";
+  #$ENV{DYLD_LIBRARY_PATH} = "$ENV{DYLD_LIBRARY_PATH}:$platformLib";
 
   # Setup pkg-config.
   my $pkgConfigPath = File::Spec->join($prefix, 'lib/pkgconfig');
@@ -296,7 +302,7 @@ sub build
     {
 		print(qq{PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH}\n});
 		print(qq{PATH=$ENV{PATH}\n});
-		print(qq{DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}\n});
+		#print(qq{DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}\n});
 		print(qq{PREFIX=$ENV{PREFIX}\n});
 		print(qq{SDKROOT=$ENV{PREFIX}\n});
 		print(qq{IPHONEOS_DEPLOYMENT_TARGET=$ENV{IPHONEOS_DEPLOYMENT_TARGET}\n});
@@ -332,7 +338,7 @@ sub build
     
 	if($package->{build})
     {
-    my $build = $package->{bild};
+    my $build = $package->{build};
 	
     $build =~ s/ROOT/$prefix/g;
     
@@ -376,6 +382,7 @@ Usage: build.pl [options] [package(s)]
     --platform=macosx|iphoneos|iphonesimulator
     --architecture=i386|x86_64|arm7|arm64
     --deployment=<deployment version>
+    --group=<group>
     --debug For debugging statements
     
   and [package(s)] is an optional list of packages to build. 
