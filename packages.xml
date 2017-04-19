@@ -247,7 +247,7 @@
     <notes></notes>
     <source>sources/HDF/hdf-4.2.12.tar.gz</source>
     <url>https://support.hdfgroup.org/ftp/HDF/releases/HDF4.2.12/src/hdf-4.2.12.tar.gz</url>
-    <configure>./configure --enable-production --enable-shared --disable-fortran</configure>
+    <configure>./configure --enable-shared --disable-netcdf --disable-fortran</configure>
     <build>make</build>
     <install>make install</install>
   </package>
@@ -269,7 +269,7 @@
     <description>NetCDF.</description>
     <source>sources/NetCDF/netcdf-4.4.1.1.tar.gz</source>
     <url>ftp://ftp.unidata.ucar.edu/pub/netcdf/netcdf-4.4.1.1.tar.gz</url>
-    <configure>./configure --enable-hdf4</configure>
+    <configure>./configure --enable-hdf4 --enable-hdf4-file-tests</configure>
     <build>make</build>
     <install>make install</install>
   </package>
@@ -360,6 +360,18 @@
     <install>make install</install>
   </package>
   <package>
+    <!-- Distribution not necessary. -->
+    <name>Python</name>
+    <group>GDAL</group>
+    <license type="PSFL">Other.</license>
+    <description>Python.</description>
+    <source>sources/Python/Python-2.7.13.tgz</source>
+    <url>https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz</url>
+    <configure>./configure</configure>
+    <build>make</build>
+    <install>make install</install>
+  </package>
+  <package>
     <!-- GDAL_DATA ROOT/share/gdal -->
     <name>GDAL</name>
     <group>GDAL</group>
@@ -367,7 +379,7 @@
     <description>Geographic Data Abstraction Library.</description>
     <source>sources/GDAL/gdal-2.1.3.tar.gz</source>
     <url>http://download.osgeo.org/gdal/2.1.3/gdal-2.1.3.tar.gz</url>
-    <configure>./configure --with-expat=ROOT --with-mysql=ROOT/bin/mysql_config --with-libkml=ROOT --with-sqlite3=ROOT --with-spatialite=ROOT --with-poppler=ROOT --with-freexl=ROOT --with-static-proj4 --with-netcdf=ROOT</configure>
+    <configure>./configure --with-python=ROOT/bin/python --with-expat=ROOT --with-mysql=ROOT/bin/mysql_config --with-libkml=ROOT --with-sqlite3=ROOT --with-spatialite=ROOT --with-poppler=ROOT --with-freexl=ROOT --with-static-proj4 --with-netcdf=ROOT</configure>
     <build>make</build>
     <install>make install</install>
   </package>
