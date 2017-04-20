@@ -134,10 +134,9 @@ sub build
   
   $ENV{PATH} = "$ENV{PATH}:$platformPath";
 
-  # Setup the dynamic library search path.
-  #my $platformLib = File::Spec->join($root, 'platforms', $sdk, $arch, 'lib');
+  my $pythonPath = File::Spec->join($root, 'python/bin');
   
-  #$ENV{DYLD_LIBRARY_PATH} = "$ENV{DYLD_LIBRARY_PATH}:$platformLib";
+  $ENV{PATH} = "$ENV{PATH}:$pythonPath";
 
   # Setup pkg-config.
   my $pkgConfigPath = File::Spec->join($prefix, 'lib/pkgconfig');
@@ -322,7 +321,8 @@ sub build
 	  {
     my $cmake = $package->{cmake};
   
-    $cmake =~ s/ROOT/$prefix/g;
+    $cmake =~ s/PREFIX/$prefix/g;
+    $cmake =~ s/ROOT/$root/g;
     
 		runsystem(qq{$cmake @cmakeargs})
 		}
@@ -331,7 +331,8 @@ sub build
     {
     my $configure = $package->{configure};
 	
-    $configure =~ s/ROOT/$prefix/g;
+    $configure =~ s/PREFIX/$prefix/g;
+    $configure =~ s/ROOT/$root/g;
     
 	  runsystem(qq{$configure @configureargs})
     }
@@ -340,7 +341,8 @@ sub build
     {
     my $build = $package->{build};
 	
-    $build =~ s/ROOT/$prefix/g;
+    $build =~ s/PREFIX/$prefix/g;
+    $build =~ s/ROOT/$root/g;
     
 	  runsystem(qq{$build})
     }
