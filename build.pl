@@ -128,15 +128,15 @@ sub build
   # Setup the executable search path.
   my $path = File::Spec->join($root, 'usr/bin');
   
-  $ENV{PATH} = "$ENV{PATH}:$path";
+  $ENV{PATH} = "$path:$ENV{PATH}";
     
   my $platformPath = File::Spec->join($root, 'platforms', $sdk, $arch, 'bin');
   
-  $ENV{PATH} = "$ENV{PATH}:$platformPath";
+  $ENV{PATH} = "$platformPath:$ENV{PATH}";
 
   my $pythonPath = File::Spec->join($root, 'python/bin');
   
-  $ENV{PATH} = "$ENV{PATH}:$pythonPath";
+  $ENV{PATH} = "$pythonPath:$ENV{PATH}";
 
   # Setup pkg-config.
   my $pkgConfigPath = File::Spec->join($prefix, 'lib/pkgconfig');
@@ -301,7 +301,6 @@ sub build
     {
 		print(qq{PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH}\n});
 		print(qq{PATH=$ENV{PATH}\n});
-		#print(qq{DYLD_LIBRARY_PATH=$ENV{DYLD_LIBRARY_PATH}\n});
 		print(qq{PREFIX=$ENV{PREFIX}\n});
 		print(qq{SDKROOT=$ENV{PREFIX}\n});
 		print(qq{IPHONEOS_DEPLOYMENT_TARGET=$ENV{IPHONEOS_DEPLOYMENT_TARGET}\n});

@@ -78,17 +78,6 @@
     <install>make install</install>
   </package>
   <package>
-    <name>iconv</name>
-    <group>GDAL</group>
-    <license type="GPL">GPLv3</license>
-    <description>Internationalization.</description>
-    <source>sources/iconv/libiconv-1.15.tar.gz</source>
-    <url>https://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.15.tar.gz</url>
-    <configure>./configure</configure>
-    <build>make</build>
-    <install>make install</install>
-  </package>
-  <package>
     <name>Expat</name>
     <group>GDAL</group>
     <license type="MIT">MIT.</license>
@@ -244,7 +233,6 @@
   </package>
   <package>
     <name>JPEG9</name>
-    <group>GDAL</group>
     <license type="other">IJG. Citation required.</license>
     <description>New JPEG package.</description>
     <source>sources/JPEG/jpegsrc.v9b.tar.gz</source>
