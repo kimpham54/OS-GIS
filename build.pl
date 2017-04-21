@@ -14,6 +14,7 @@ my $platform;
 my $architecture;
 my $deployment;
 my $group;
+my $retry;
 my $debug;
 
 GetOptions
@@ -23,12 +24,16 @@ GetOptions
   'architecture=s' => \$architecture,
   'deployment=s' => \$deployment,
   'group=s' => \$group,
+  'retry' => \$retry,
   'debug' => \$debug
   );
   
 die usage()
   if $help;
 
+$debug = 1
+  if $retry;
+  
 # Read packages to build, if any, from the command line.
 my @packageNamesToBuild = @ARGV;
 
@@ -176,27 +181,33 @@ sub build
 		{
 		$dir = $tmpdir;
 	
-		runsystem(qq{/bin/rm -Rf "$dir"});
-		runsystem(qq{/bin/cp -R "$source" "$dir"});
+	  if(!$retry)
+	    {
+		  runsystem(qq{/bin/rm -Rf "$dir"});
+		  runsystem(qq{/bin/cp -R "$source" "$dir"});
+		  }
 		}
 	else
 		{
-		runsystem(qq{/bin/rm -Rf "$tmpdir"});
-		runsystem(qq{/bin/mkdir -p "$tmpdir"});
+		if(!$retry)
+		  {
+			runsystem(qq{/bin/rm -Rf "$tmpdir"});
+			runsystem(qq{/bin/mkdir -p "$tmpdir"});
 
-		if($archive =~ /\.tgz|\.tar\.gz$|\.tar\.xz/)
-			{
-			runsystem(qq{/usr/bin/tar xf "$source" "-C$tmpdir"});
-			} 
-		elsif($archive =~ /\.tbz|\.tar\.bz2$/)
-			{
-			runsystem(qq{/usr/bin/tar xf "$source" "-C/tmp/$archive"});
+			if($archive =~ /\.tgz|\.tar\.gz$|\.tar\.xz/)
+				{
+				runsystem(qq{/usr/bin/tar xf "$source" "-C$tmpdir"});
+				} 
+			elsif($archive =~ /\.tbz|\.tar\.bz2$/)
+				{
+				runsystem(qq{/usr/bin/tar xf "$source" "-C/tmp/$archive"});
+				}
+			elsif($archive =~ /\.zip$/)
+				{
+				runsystem(qq{/usr/bin/unzip "$source" -d "/tmp/$archive"});
+				}
 			}
-		elsif($archive =~ /\.zip$/)
-			{
-			runsystem(qq{/usr/bin/unzip "$source" -d "/tmp/$archive"});
-			}
-
+			
 		$dir = `/usr/bin/find $tmpdir -mindepth 1 -maxdepth 1`;
 	
 		chomp $dir;
@@ -286,7 +297,9 @@ sub build
   # Setup compiler flags.
   my $includePath = File::Spec->join($prefix, 'include');
   
-  my $cppflags = "-I$includePath ";
+  my $sdkIncludePath = File::Spec->join($sdkroot, 'usr', 'include');
+  
+  my $cppflags = "-I$includePath -I$sdkIncludePath";
 
   $ENV{CPPFLAGS} = $cppflags;
 	$ENV{CFLAGS} = $cflags;
@@ -294,7 +307,9 @@ sub build
 
   my $linkPath = File::Spec->join($prefix, 'lib');
 
-	$ENV{LDFLAGS} = "-L$linkPath ";
+  my $sdkLinkPath = File::Spec->join($sdkroot, 'usr', 'lib');
+  
+	$ENV{LDFLAGS} = "-L$linkPath -L$sdkLinkPath ";
 
   # Debug statements.
   if($debug)
@@ -384,6 +399,7 @@ Usage: build.pl [options] [package(s)]
     --architecture=i386|x86_64|arm7|arm64
     --deployment=<deployment version>
     --group=<group>
+    --retry Don't delete and recopy temp directory
     --debug For debugging statements
     
   and [package(s)] is an optional list of packages to build. 
