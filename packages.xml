@@ -181,7 +181,7 @@
     <group>GDAL</group>
     <license type="Public domain">Public domain.</license>
     <description>SQLite database.</description>
-    <source>sources/SQLite/sqlite-autoconf-3180000</source>
+    <source>sources/SQLite/sqlite-autoconf-3180000.tar.gz</source>
     <url>https://www.sqlite.org/2017/sqlite-autoconf-3180000.tar.gz</url>
     <configure>./configure</configure>
     <build>make</build>
@@ -192,7 +192,7 @@
     <group>GDAL</group>
     <license type="GPL">GPLv2</license>
     <description>Open DataBase Connectivity</description>
-    <source>sources/ODBC/unixODBC-2.3.4</source>
+    <source>sources/ODBC/unixODBC-2.3.4.tar.gz</source>
     <url>http://www.unixodbc.org/unixODBC-2.3.4.tar.gz</url>
     <configure>autoreconf -fv; automake --add-missing; ./configure --enable-gui=no</configure>
     <build>make</build>

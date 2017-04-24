@@ -99,7 +99,7 @@ sub build
   {
   my $package = shift;
   
-	print "*** Building $package->{name} ***\n";
+  print "*** Building $package->{name} ***\n";
 
   my $name = $package->{name};
   my $source = $package->{source};
@@ -149,9 +149,9 @@ sub build
   $ENV{PKG_CONFIG_PATH} = "$ENV{PKG_CONFIG_PATH}:$pkgConfigPath";
 
   # Add extra parameters.    
-	my @configureargs;
-	my @cmakeargs;
-	
+  my @configureargs;
+  my @cmakeargs;
+  
   # Make sure prefix is set.
   push @configureargs, "--prefix=$prefix";
   push @cmakeargs, "-DCMAKE_INSTALL_PREFIX=$prefix";
@@ -164,114 +164,114 @@ sub build
     $ENV{$variable} = "@{$values}";
     }
     
-	my $dir;
+  my $dir;
 
-	if(!-e $source)
-		{
-		printf("Source archive/directory '$source' not found\n");
-		die usage();
-		}
-	
-	my $archive = basename($source);
+  if(!-e $source)
+    {
+    printf("Source archive/directory '$source' not found\n");
+    die usage();
+    }
+  
+  my $archive = basename($source);
 
-	my $tmpdir = File::Spec->join('/tmp', $archive);
+  my $tmpdir = File::Spec->join('/tmp', $archive);
 
-	# If the archive is a directory, copy it to /tmp to work on it.
-	if(-d $source)
-		{
-		$dir = $tmpdir;
-	
-	  if(!$retry)
-	    {
-		  runsystem(qq{/bin/rm -Rf "$dir"});
-		  runsystem(qq{/bin/cp -R "$source" "$dir"});
-		  }
-		}
-	else
-		{
-		if(!$retry)
-		  {
-			runsystem(qq{/bin/rm -Rf "$tmpdir"});
-			runsystem(qq{/bin/mkdir -p "$tmpdir"});
+  # If the archive is a directory, copy it to /tmp to work on it.
+  if(-d $source)
+    {
+    $dir = $tmpdir;
+  
+    if(!$retry)
+      {
+      runsystem(qq{/bin/rm -Rf "$dir"});
+      runsystem(qq{/bin/cp -R "$source" "$dir"});
+      }
+    }
+  else
+    {
+    if(!$retry)
+      {
+      runsystem(qq{/bin/rm -Rf "$tmpdir"});
+      runsystem(qq{/bin/mkdir -p "$tmpdir"});
 
-			if($archive =~ /\.tgz|\.tar\.gz$|\.tar\.xz/)
-				{
-				runsystem(qq{/usr/bin/tar xf "$source" "-C$tmpdir"});
-				} 
-			elsif($archive =~ /\.tbz|\.tar\.bz2$/)
-				{
-				runsystem(qq{/usr/bin/tar xf "$source" "-C/tmp/$archive"});
-				}
-			elsif($archive =~ /\.zip$/)
-				{
-				runsystem(qq{/usr/bin/unzip "$source" -d "/tmp/$archive"});
-				}
-			}
-			
-		$dir = `/usr/bin/find $tmpdir -mindepth 1 -maxdepth 1`;
-	
-		chomp $dir;
-		}
+      if($archive =~ /\.tgz|\.tar\.gz$|\.tar\.xz/)
+        {
+        runsystem(qq{/usr/bin/tar xf "$source" "-C$tmpdir"});
+        } 
+      elsif($archive =~ /\.tbz|\.tar\.bz2$/)
+        {
+        runsystem(qq{/usr/bin/tar xf "$source" "-C/tmp/$archive"});
+        }
+      elsif($archive =~ /\.zip$/)
+        {
+        runsystem(qq{/usr/bin/unzip "$source" -d "/tmp/$archive"});
+        }
+      }
+      
+    $dir = `/usr/bin/find $tmpdir -mindepth 1 -maxdepth 1`;
+  
+    chomp $dir;
+    }
 
   chdir($dir);
   
-	# Set a default deployment.  
-	if(not $deployment)
-		{
-		$deployment = `xcrun --sdk $sdk --show-sdk-version`;
+  # Set a default deployment.  
+  if(not $deployment)
+    {
+    $deployment = `xcrun --sdk $sdk --show-sdk-version`;
 
-		chomp $deployment;
-		}
+    chomp $deployment;
+    }
   
-	# Setup the SDKROOT. Hopefully this will handle most situations.
-	my $sdkroot = `/usr/bin/xcrun --sdk $sdk --show-sdk-path`;
+  # Setup the SDKROOT. Hopefully this will handle most situations.
+  my $sdkroot = `/usr/bin/xcrun --sdk $sdk --show-sdk-path`;
   
-	chomp $sdkroot;
+  chomp $sdkroot;
 
-	$ENV{SDKROOT} = $sdkroot;
-	
-	my $minversion = '';
-
-	# Configure for iPhone.
-	if($sdk =~ /^iphoneos/i)
-		{
-		$minversion = sprintf('-miphoneos-version-min=%s', $deployment);
-		
-		$ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
-	
-		push @configureargs, qw(--build=x86_64-apple-darwin12 --host=arm-apple-darwin10);
-		
-		my $toolchain = File::Spec($root, 'iOS.cmake');
-		push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
-		push @cmakeargs, '-DIOS_PLATFORM=OS';
-		}
+  $ENV{SDKROOT} = $sdkroot;
   
-	# Configure for iPhone simulator.
-	elsif($sdk =~ /^iphonesimulator/i)
-		{
-		$minversion = sprintf('-mios-simulator-version-min=%s', $deployment);
+  my $minversion = '';
 
-		$ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
-		
-		my $toolchain = File::Spec($root, 'iOS.cmake');
-		push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
-		push @cmakeargs, '-DIOS_PLATFORM=SIMULATOR';
-		}
-	
-	# Configure for MacOS X.
-	elsif($sdk =~ /^macosx/i)
-		{
-		$minversion = sprintf('-mmacosx-version-min=%s', $deployment);
+  # Configure for iPhone.
+  if($sdk =~ /^iphoneos/i)
+    {
+    $minversion = sprintf('-miphoneos-version-min=%s', $deployment);
+    
+    $ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
+  
+    push @configureargs, qw(--build=x86_64-apple-darwin12 --host=arm-apple-darwin10);
+    
+    my $toolchain = File::Spec($root, 'iOS.cmake');
+    push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
+    push @cmakeargs, '-DIOS_PLATFORM=OS';
+    }
+  
+  # Configure for iPhone simulator.
+  elsif($sdk =~ /^iphonesimulator/i)
+    {
+    $minversion = sprintf('-mios-simulator-version-min=%s', $deployment);
 
-		$ENV{MACOSX_DEPLOYMENT_TARGET} = $deployment;
-		}
+    $ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
+    
+    my $toolchain = File::Spec($root, 'iOS.cmake');
+    push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
+    push @cmakeargs, '-DIOS_PLATFORM=SIMULATOR';
+    }
+  
+  # Configure for MacOS X.
+  elsif($sdk =~ /^macosx/i)
+    {
+    $minversion = sprintf('-mmacosx-version-min=%s', $deployment);
 
-	# Setup the isysroot command-line parameters and PATH, if necessary.
-	$ENV{PATH} = sprintf(
-		'%s:%s:/usr/bin:/bin:/usr/sbin:/sbin',
-		$sdkroot,
-		'/Applications/Xcode.app/Contents/Developer/usr/bin')
-	if $sdk && ($sdk =~ /^iphone/i);
+    $ENV{MACOSX_DEPLOYMENT_TARGET} = $deployment;
+    }
+
+  # Setup the isysroot command-line parameters and PATH, if necessary.
+  $ENV{PATH} = sprintf(
+    '%s:%s:/usr/bin:/bin:/usr/sbin:/sbin',
+    $sdkroot,
+    '/Applications/Xcode.app/Contents/Developer/usr/bin')
+  if $sdk && ($sdk =~ /^iphone/i);
 
   my $cflags = '';
   my $cxxflags = '';
@@ -302,74 +302,74 @@ sub build
   my $cppflags = "-I$includePath -I$sdkIncludePath";
 
   $ENV{CPPFLAGS} = $cppflags;
-	$ENV{CFLAGS} = $cflags;
-	$ENV{CXXFLAGS} = $cxxflags;
+  $ENV{CFLAGS} = $cflags;
+  $ENV{CXXFLAGS} = $cxxflags;
 
   my $linkPath = File::Spec->join($prefix, 'lib');
 
   my $sdkLinkPath = File::Spec->join($sdkroot, 'usr', 'lib');
   
-	$ENV{LDFLAGS} = "-L$linkPath -L$sdkLinkPath ";
+  $ENV{LDFLAGS} = "$cflags -L$linkPath -L$sdkLinkPath ";
 
   # Debug statements.
   if($debug)
     {
-		print(qq{PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH}\n});
-		print(qq{PATH=$ENV{PATH}\n});
-		print(qq{PREFIX=$ENV{PREFIX}\n});
-		print(qq{SDKROOT=$ENV{PREFIX}\n});
-		print(qq{IPHONEOS_DEPLOYMENT_TARGET=$ENV{IPHONEOS_DEPLOYMENT_TARGET}\n});
-		print(qq{MACOSX_DEPLOYMENT_TARGET=$ENV{MACOSX_DEPLOYMENT_TARGET}\n});
-		print(qq{CPPFLAGS=$ENV{CPPFLAGS}\n});
-		print(qq{CFLAGS=$ENV{CFLAGS}\n});
-		print(qq{CXXFLAGS=$ENV{CXXFLAGS}\n});
-		print(qq{LDFLAGS=$ENV{LDFLAGS}\n});
-		
+    print(qq{PKG_CONFIG_PATH=$ENV{PKG_CONFIG_PATH}\n});
+    print(qq{PATH=$ENV{PATH}\n});
+    print(qq{PREFIX=$ENV{PREFIX}\n});
+    print(qq{SDKROOT=$ENV{PREFIX}\n});
+    print(qq{IPHONEOS_DEPLOYMENT_TARGET=$ENV{IPHONEOS_DEPLOYMENT_TARGET}\n});
+    print(qq{MACOSX_DEPLOYMENT_TARGET=$ENV{MACOSX_DEPLOYMENT_TARGET}\n});
+    print(qq{CPPFLAGS=$ENV{CPPFLAGS}\n});
+    print(qq{CFLAGS=$ENV{CFLAGS}\n});
+    print(qq{CXXFLAGS=$ENV{CXXFLAGS}\n});
+    print(qq{LDFLAGS=$ENV{LDFLAGS}\n});
+    
     foreach my $env (keys %env)
       {
       print(qq{$env=$ENV{$env}\n})
       }
     }
     
-	if($package->{cmake})
-	  {
+  if($package->{cmake})
+    {
     my $cmake = $package->{cmake};
   
     $cmake =~ s/PREFIX/$prefix/g;
     $cmake =~ s/ROOT/$root/g;
     
-		runsystem(qq{$cmake @cmakeargs})
-		}
-		
-	if($package->{configure})
+    runsystem(qq{$cmake @cmakeargs})
+    }
+    
+  if($package->{configure})
     {
     my $configure = $package->{configure};
-	
+  
     $configure =~ s/PREFIX/$prefix/g;
     $configure =~ s/ROOT/$root/g;
     
-	  runsystem(qq{$configure @configureargs})
+    runsystem(qq{$configure @configureargs})
     }
     
-	if($package->{build})
+  if($package->{build})
     {
     my $build = $package->{build};
-	
+  
     $build =~ s/PREFIX/$prefix/g;
     $build =~ s/ROOT/$root/g;
     
-	  runsystem(qq{$build})
+    runsystem(qq{$build})
     }
 
   runsystem(qq{$package->{install}})
-	  if $package->{install};
-	  
-	chdir($root);
-	
-	runsystem(qq{rm -Rf $tmpdir})
-	  if not $debug;
-	  
-	print "*** Done building $package->{name} ***\n";
+    if $package->{install};
+    
+  chdir($root);
+  
+  runsystem(qq{rm -Rf $tmpdir})
+    if not $debug;
+    
+  print "*** Done building $package->{name} ***\n";
   }
 
 sub debug
