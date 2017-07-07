@@ -111,31 +111,30 @@ sub build
       ? $package->{platform}
       : $platform;
       
-  $sdk = 'macosx'
-    if not $sdk;
-
   # Set a default architecture.
   my $arch = 
     $package->{architecture}
       ? $package->{architecture}
       : $architecture;
       
-  $arch = 'x86_64'
-    if not $arch;
-
   my $root = getcwd();
   
+  my $platformRoot =
+    $sdk && $arch
+      ? File::Spec->join($root, 'platforms')
+      : $root;
+
   my $prefix = 
     $package->{prefix}
       ? File::Spec->join($root, $package->{prefix})
-      : File::Spec->join($root, 'platforms', $sdk, $arch);
+      : File::Spec->join($platformRoot, $sdk, $arch);
       
   # Setup the executable search path.
   my $path = File::Spec->join($root, 'usr/bin');
   
   $ENV{PATH} = "$path:$ENV{PATH}";
     
-  my $platformPath = File::Spec->join($root, 'platforms', $sdk, $arch, 'bin');
+  my $platformPath = File::Spec->join($platformRoot, $sdk, $arch, 'bin');
   
   $ENV{PATH} = "$platformPath:$ENV{PATH}";
 
@@ -395,8 +394,8 @@ Usage: build.pl [options] [package(s)]
 
   where [options] can be:
     --help This help text
-    --platform=macosx|iphoneos|iphonesimulator
-    --architecture=i386|x86_64|arm7|arm64
+    --platform=macosx|iphoneos|iphonesimulator|native
+    --architecture=i386|x86_64|arm7|arm64|native
     --deployment=<deployment version>
     --group=<group>
     --retry Don't delete and recopy temp directory
