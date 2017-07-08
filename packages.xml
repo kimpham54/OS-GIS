@@ -172,7 +172,7 @@
     <description>MySQL client connector</description>
     <source>sources/MySQL/mysql-connector-c-6.1.9-src.tar.gz</source>
     <url>https://cdn.mysql.com//Downloads/Connector-C/mysql-connector-c-6.1.9-src.tar.gz</url>
-    <cmake>mkdir build; cd build; /Applications/CMake.app/Contents/bin/cmake .. -G "Unix Makefiles" -DLIBMYSQL_OS_OUTPUT_NAME=mysqlclient</cmake>
+    <cmake>mkdir build; cd build; cmake .. -G "Unix Makefiles" -DLIBMYSQL_OS_OUTPUT_NAME=mysqlclient</cmake>
     <build>cd build; make</build>
     <install>cd build; make install</install>
   </package>
@@ -294,7 +294,7 @@
     <description>JPEG2000</description>
     <source>sources/OpenJPEG/openjpeg-v2.1.2.tar.gz</source>
     <url>https://codeload.github.com/uclouvain/openjpeg/tar.gz/v2.1.2</url>
-    <cmake>mkdir build; cd build; /Applications/CMake.app/Contents/bin/cmake ..</cmake>
+    <cmake>mkdir build; cd build; cmake ..</cmake>
     <build>cd build; make</build>
     <install>cd build; make install</install>
   </package>

@@ -34,6 +34,11 @@ die usage()
 $debug = 1
   if $retry;
   
+my $tar = '/usr/bin/tar';
+
+$tar = '/bin/tar'
+  if not -f $tar && -f '/bin/tar';
+
 # Read packages to build, if any, from the command line.
 my @packageNamesToBuild = @ARGV;
 
@@ -122,7 +127,7 @@ sub build
   my $platformRoot =
     $sdk && $arch
       ? File::Spec->join($root, 'platforms')
-      : $root;
+      : File::Spec->join($root, 'usr');
 
   my $prefix = 
     $package->{prefix}
@@ -142,6 +147,9 @@ sub build
   
   $ENV{PATH} = "$pythonPath:$ENV{PATH}";
 
+  # Add Cmake.
+  $ENV{PATH} = "/Applications/CMake.app/Contents/bin:$ENV{PATH}";
+  
   # Setup pkg-config.
   my $pkgConfigPath = File::Spec->join($prefix, 'lib/pkgconfig');
   
@@ -195,11 +203,11 @@ sub build
 
       if($archive =~ /\.tgz|\.tar\.gz$|\.tar\.xz/)
         {
-        runsystem(qq{/usr/bin/tar xf "$source" "-C$tmpdir"});
+        runsystem(qq{$tar xf "$source" "-C$tmpdir"});
         } 
       elsif($archive =~ /\.tbz|\.tar\.bz2$/)
         {
-        runsystem(qq{/usr/bin/tar xf "$source" "-C/tmp/$archive"});
+        runsystem(qq{$tar xf "$source" "-C/tmp/$archive"});
         }
       elsif($archive =~ /\.zip$/)
         {
@@ -222,55 +230,59 @@ sub build
     chomp $deployment;
     }
   
-  # Setup the SDKROOT. Hopefully this will handle most situations.
-  my $sdkroot = `/usr/bin/xcrun --sdk $sdk --show-sdk-path`;
-  
-  chomp $sdkroot;
-
-  $ENV{SDKROOT} = $sdkroot;
-  
+  my $sdkroot;
   my $minversion = '';
 
-  # Configure for iPhone.
-  if($sdk =~ /^iphoneos/i)
+  if(-f '/usr/bin/xcrun')
     {
-    $minversion = sprintf('-miphoneos-version-min=%s', $deployment);
+    # Setup the SDKROOT. Hopefully this will handle most situations.
+    $sdkroot = `/usr/bin/xcrun --sdk $sdk --show-sdk-path`;
     
-    $ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
+    chomp $sdkroot;
   
-    push @configureargs, qw(--build=x86_64-apple-darwin12 --host=arm-apple-darwin10);
+    $ENV{SDKROOT} = $sdkroot;
     
-    my $toolchain = File::Spec($root, 'iOS.cmake');
-    push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
-    push @cmakeargs, '-DIOS_PLATFORM=OS';
-    }
-  
-  # Configure for iPhone simulator.
-  elsif($sdk =~ /^iphonesimulator/i)
-    {
-    $minversion = sprintf('-mios-simulator-version-min=%s', $deployment);
-
-    $ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
+    # Configure for iPhone.
+    if($sdk =~ /^iphoneos/i)
+      {
+      $minversion = sprintf('-miphoneos-version-min=%s', $deployment);
+      
+      $ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
     
-    my $toolchain = File::Spec($root, 'iOS.cmake');
-    push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
-    push @cmakeargs, '-DIOS_PLATFORM=SIMULATOR';
-    }
+      push @configureargs, qw(--build=x86_64-apple-darwin12 --host=arm-apple-darwin10);
+      
+      my $toolchain = File::Spec($root, 'iOS.cmake');
+      push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
+      push @cmakeargs, '-DIOS_PLATFORM=OS';
+      }
+    
+    # Configure for iPhone simulator.
+    elsif($sdk =~ /^iphonesimulator/i)
+      {
+      $minversion = sprintf('-mios-simulator-version-min=%s', $deployment);
   
-  # Configure for MacOS X.
-  elsif($sdk =~ /^macosx/i)
-    {
-    $minversion = sprintf('-mmacosx-version-min=%s', $deployment);
+      $ENV{IPHONEOS_DEPLOYMENT_TARGET} = $deployment;
+      
+      my $toolchain = File::Spec($root, 'iOS.cmake');
+      push @cmakeargs, "-DCMAKE_TOOLCHAIN_FILE=$toolchain";
+      push @cmakeargs, '-DIOS_PLATFORM=SIMULATOR';
+      }
+    
+    # Configure for MacOS X.
+    elsif($sdk =~ /^macosx/i)
+      {
+      $minversion = sprintf('-mmacosx-version-min=%s', $deployment);
+  
+      $ENV{MACOSX_DEPLOYMENT_TARGET} = $deployment;
+      }
 
-    $ENV{MACOSX_DEPLOYMENT_TARGET} = $deployment;
+    # Setup the isysroot command-line parameters and PATH, if necessary.
+    $ENV{PATH} = sprintf(
+      '%s:%s:/usr/bin:/bin:/usr/sbin:/sbin',
+      $sdkroot,
+      '/Applications/Xcode.app/Contents/Developer/usr/bin')
+      if $sdk && ($sdk =~ /^iphone/i);
     }
-
-  # Setup the isysroot command-line parameters and PATH, if necessary.
-  $ENV{PATH} = sprintf(
-    '%s:%s:/usr/bin:/bin:/usr/sbin:/sbin',
-    $sdkroot,
-    '/Applications/Xcode.app/Contents/Developer/usr/bin')
-  if $sdk && ($sdk =~ /^iphone/i);
 
   my $cflags = '';
   my $cxxflags = '';
